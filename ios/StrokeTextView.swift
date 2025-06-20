@@ -2,12 +2,14 @@ import Foundation
 import UIKit
 
 class StrokeTextView: RCTView {
-    weak var bridge: RCTBridge?
 
+    // MARK: - Properties
+    weak var bridge: RCTBridge?
     public var label: StrokedTextLabel
     private var fontCache: [String: UIFont] = [:]
 
-    init(frame: CGRect) {
+    // MARK: - init
+    init(bridge: RCTBridge) {
         self.bridge = bridge
         label = StrokedTextLabel()
         super.init(frame: .zero)
@@ -15,28 +17,28 @@ class StrokeTextView: RCTView {
         label.textColor = colorStringToUIColor(colorString: color)
         label.outlineColor = colorStringToUIColor(colorString: strokeColor)
 
-        label.translatesAutoresizingMaskIntoConstraints =
-            false
-            + addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(label)
 
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            label.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            label.topAnchor.constraint(equalTo: self.topAnchor),
-            label.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor),
+            label.topAnchor.constraint(equalTo: topAnchor),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    // Storyboard/XIB not supported
+    required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
+    // MARK: - Report height to RN
     override func layoutSubviews() {
         super.layoutSubviews()
         let size = label.intrinsicContentSize
         bridge?.uiManager.setSize(size, for: self)
     }
 
+    // MARK: - Properties
     @objc var text: String = "" {
         didSet {
             if text != oldValue {
