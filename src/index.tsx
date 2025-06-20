@@ -1,14 +1,14 @@
 import React from "react";
-import { requireNativeComponent } from "react-native";
+import { requireNativeComponent, StyleProp, ViewStyle } from "react-native";
 
 const ComponentName = "StrokeTextView";
 
-type TextAlign = "center" | "left" | "right"
+type TextAlign = "center" | "left" | "right";
 
 export interface StrokeTextProps {
-  width?: number;
   text: string;
   fontSize?: number;
+  fontWeight?: string;
   color?: string;
   strokeColor?: string;
   strokeWidth?: number;
@@ -16,6 +16,7 @@ export interface StrokeTextProps {
   align?: TextAlign;
   numberOfLines?: number;
   ellipsis?: boolean;
+  style?: StyleProp<ViewStyle>;
 }
 
 const NativeStrokeText = requireNativeComponent<StrokeTextProps>(ComponentName);
