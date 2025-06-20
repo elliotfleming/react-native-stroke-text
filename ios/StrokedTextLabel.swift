@@ -29,7 +29,7 @@ class StrokedTextLabel: UILabel {
 
     // MARK: - Drawing
     override func drawText(in rect: CGRect) {
-        let shadowOffset = shadowOffset
+        let savedShadowOffset = self.shadowOffset  // rename to avoid shadowing
         let originalColor = textColor
 
         lineBreakMode = ellipsis ? .byTruncatingTail : .byWordWrapping
@@ -52,10 +52,10 @@ class StrokedTextLabel: UILabel {
         // Fill
         ctx.setTextDrawingMode(.fill)
         textColor = originalColor
-        shadowOffset = .zero
+        self.shadowOffset = .zero
         super.drawText(in: insetRect)
 
-        shadowOffset = shadowOffset
+        self.shadowOffset = savedShadowOffset  // restore
     }
 
     // MARK: - Size
