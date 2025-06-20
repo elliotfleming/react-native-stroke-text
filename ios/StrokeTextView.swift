@@ -2,18 +2,22 @@ import Foundation
 import UIKit
 
 class StrokeTextView: RCTView {
-    public var label: StrokedTextLabel
+    weak var bridge: RCTBridge?
 
+    public var label: StrokedTextLabel
     private var fontCache: [String: UIFont] = [:]
 
-    override init(frame: CGRect) {
+    init(frame: CGRect) {
+        self.bridge = bridge
         label = StrokedTextLabel()
         super.init(frame: .zero)
 
         label.textColor = colorStringToUIColor(colorString: color)
         label.outlineColor = colorStringToUIColor(colorString: strokeColor)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(label)
+
+        label.translatesAutoresizingMaskIntoConstraints =
+            false
+            + addSubview(label)
 
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -25,6 +29,12 @@ class StrokeTextView: RCTView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let size = label.intrinsicContentSize
+        bridge?.uiManager.setSize(size, for: self)
     }
 
     @objc var text: String = "" {

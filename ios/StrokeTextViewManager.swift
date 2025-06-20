@@ -5,8 +5,7 @@ import UIKit
 class StrokeTextViewManager: RCTViewManager {
 
     override func view() -> UIView! {
-        // StrokeTextView no longer needs a bridge parameter
-        return StrokeTextView(frame: .zero)
+        return StrokeTextView(bridge: self.bridge)
     }
 
     @objc override static func requiresMainQueueSetup() -> Bool {
