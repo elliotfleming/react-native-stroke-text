@@ -1,42 +1,30 @@
-import UIKit
 import Foundation
+import UIKit
 
 class StrokeTextView: RCTView {
     public var label: StrokedTextLabel
-    weak var bridge: RCTBridge?
 
     private var fontCache: [String: UIFont] = [:]
 
-    init(bridge: RCTBridge) {
+    override init(frame: CGRect) {
         label = StrokedTextLabel()
-        self.bridge = bridge
         super.init(frame: .zero)
+
         label.textColor = colorStringToUIColor(colorString: color)
         label.outlineColor = colorStringToUIColor(colorString: strokeColor)
         label.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(label)
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: self.centerYAnchor)
-        ])
-    }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.bridge?.uiManager.setSize(label.intrinsicContentSize, for: self)
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            label.topAnchor.constraint(equalTo: self.topAnchor),
+            label.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        ])
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    @objc var width: NSNumber = 0 {
-        didSet {
-            if width != oldValue {
-                self.label.customWidth = CGFloat(truncating: width)
-                label.setNeedsDisplay()
-            }
-        }
     }
 
     @objc var text: String = "" {
@@ -54,6 +42,30 @@ class StrokeTextView: RCTView {
                 label.font = label.font.withSize(CGFloat(truncating: fontSize))
                 label.setNeedsDisplay()
             }
+        }
+    }
+
+    @objc var fontWeight: String = "normal" {
+        didSet {
+            guard fontWeight != oldValue else { return }
+
+            let weight: UIFont.Weight = {
+                switch fontWeight {
+                case "100", "thin": return .thin
+                case "200", "light": return .light
+                case "300", "ultralight": return .ultraLight
+                case "400", "regular": return .regular
+                case "500", "medium": return .medium
+                case "600", "semibold": return .semibold
+                case "bold", "700": return .bold
+                case "800", "heavy": return .heavy
+                case "900", "black": return .black
+                default: return .regular
+                }
+            }()
+
+            label.font = UIFont.systemFont(ofSize: CGFloat(truncating: fontSize), weight: weight)
+            label.setNeedsDisplay()
         }
     }
 
@@ -92,7 +104,7 @@ class StrokeTextView: RCTView {
                     label.font = cachedFont
                 } else {
                     let newFont: UIFont?
-                    if let reactFont = RCTFont.update(nil, withFamily: fontFamily){
+                    if let reactFont = RCTFont.update(nil, withFamily: fontFamily) {
                         newFont = reactFont.withSize(CGFloat(truncating: fontSize))
                     } else {
                         newFont = UIFont(name: fontFamily, size: CGFloat(truncating: fontSize))
@@ -153,21 +165,29 @@ class StrokeTextView: RCTView {
                 var rgbValue: UInt64 = 0
                 Scanner(string: String(string.dropFirst())).scanHexInt64(&rgbValue)
                 return UIColor(
-                        red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
-                        green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-                        blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
-                        alpha: 1.0
+                    red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+                    green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+                    blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+                    alpha: 1.0
                 )
             }
         } else if string.hasPrefix("RGBA") {
-            let components = string.dropFirst(5).dropLast(1).split(separator: ",").map { CGFloat(Double($0.trimmingCharacters(in: .whitespaces)) ?? 0) }
+            let components = string.dropFirst(5).dropLast(1).split(separator: ",").map {
+                CGFloat(Double($0.trimmingCharacters(in: .whitespaces)) ?? 0)
+            }
             if components.count == 4 {
-                return UIColor(red: components[0] / 255.0, green: components[1] / 255.0, blue: components[2] / 255.0, alpha: components[3])
+                return UIColor(
+                    red: components[0] / 255.0, green: components[1] / 255.0,
+                    blue: components[2] / 255.0, alpha: components[3])
             }
         } else if string.hasPrefix("RGB") {
-            let components = string.dropFirst(4).dropLast(1).split(separator: ",").map { CGFloat(Double($0.trimmingCharacters(in: .whitespaces)) ?? 0) }
+            let components = string.dropFirst(4).dropLast(1).split(separator: ",").map {
+                CGFloat(Double($0.trimmingCharacters(in: .whitespaces)) ?? 0)
+            }
             if components.count == 3 {
-                return UIColor(red: components[0] / 255.0, green: components[1] / 255.0, blue: components[2] / 255.0, alpha: 1.0)
+                return UIColor(
+                    red: components[0] / 255.0, green: components[1] / 255.0,
+                    blue: components[2] / 255.0, alpha: 1.0)
             }
         }
 

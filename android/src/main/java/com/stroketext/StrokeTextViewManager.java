@@ -29,6 +29,11 @@ public class StrokeTextViewManager extends SimpleViewManager<View> {
         view.setFontSize(fontSize);
     }
 
+    @ReactProp(name = "fontWeight")
+    public void setFontWeight(StrokeTextView view, String weight) {
+        view.setFontWeight(weight);
+    }
+
     @ReactProp(name = "color")
     public void setColor(StrokeTextView view, String color) {
         view.setTextColor(color);
@@ -62,10 +67,5 @@ public class StrokeTextViewManager extends SimpleViewManager<View> {
     @ReactProp(name = "ellipsis")
     public void setEllipsis(StrokeTextView view, boolean ellipsis) {
         view.setEllipsis(ellipsis);
-    }
-
-    @ReactProp(name = "width")
-    public void setWidth(StrokeTextView view, float width) {
-        view.setCustomWidth(width);
     }
 }

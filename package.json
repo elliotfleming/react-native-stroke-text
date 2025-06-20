@@ -1,15 +1,15 @@
 {
-  "name": "@charmy.tech/react-native-stroke-text",
-  "version": "1.2.3",
+  "name": "@elliotfleming/react-native-stroke-text",
+  "version": "1.2.3-lp.0",
   "description": "React Native Stroke/Outline Text",
   "main": "build/index.js",
   "source": "./src/",
-  "author": "Charmy Inc. (https://github.com/charmy)",
+  "author": "Elliot Fleming (https://github.com/elliotfleming)",
   "license": "MIT",
-  "homepage": "https://github.com/charmy/react-native-stroke-text#readme",
-  "repository": "https://github.com/charmy/react-native-stroke-text",
+  "homepage": "https://github.com/elliotfleming/react-native-stroke-text#readme",
+  "repository": "https://github.com/elliotfleming/react-native-stroke-text",
   "bugs": {
-    "url": "https://github.com/charmy/react-native-stroke-text"
+    "url": "https://github.com/elliotfleming/react-native-stroke-text"
   },
   "keywords": [
     "react-native",

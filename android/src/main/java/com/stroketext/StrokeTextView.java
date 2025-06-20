@@ -33,7 +33,6 @@ class StrokeTextView extends View {
     private StaticLayout textLayout;
     private StaticLayout strokeLayout;
     private boolean layoutDirty = true;
-    private float customWidth = 0;
     private final Map<String, Typeface> fontCache = new HashMap<>();
 
     public StrokeTextView(ThemedReactContext context) {
@@ -56,7 +55,7 @@ class StrokeTextView extends View {
             strokePaint.setTypeface(typeface);
             strokePaint.setTextSize(fontSize);
 
-            int width = (int) getCanvasWidth();
+            int width = getWidth() > 0 ? getWidth() : (int) measureTextWidth();
             CharSequence ellipsizedText = ellipsis ? TextUtils.ellipsize(text, textPaint, width, TextUtils.TruncateAt.END) : text;
             textLayout = new StaticLayout(ellipsizedText, textPaint, width, alignment, 1.0f, 0.0f, false);
             if (numberOfLines > 0 && numberOfLines < textLayout.getLineCount()) {
@@ -76,22 +75,12 @@ class StrokeTextView extends View {
         ensureLayout();
     }
 
-    private float getCanvasWidth() {
-        if (customWidth > 0) {
-            return getScaledSize(customWidth);
+    private float measureTextWidth() {
+        float max = 0f;
+        for (String line : text.split("\n")) {
+            max = Math.max(max, textPaint.measureText(line));
         }
-
-        String[] lines = text.split("\n");
-        float maxLineWidth = 0;
-        for (String line : lines) {
-            float lineWidth = textPaint.measureText(line);
-            if (lineWidth > maxLineWidth) {
-                maxLineWidth = lineWidth;
-            }
-        }
-
-        maxLineWidth += getScaledSize(strokeWidth) / 2;
-        return maxLineWidth;
+        return max + getScaledSize(strokeWidth) / 2f;
     }
 
     @Override
@@ -133,6 +122,39 @@ class StrokeTextView extends View {
         float scaledFontSize = getScaledSize(fontSize);
         if (this.fontSize != scaledFontSize) {
             this.fontSize = scaledFontSize;
+            layoutDirty = true;
+            invalidate();
+        }
+    }
+
+    public void setFontWeight(String weight) {
+        int style;
+        switch (weight) {
+            case "100":
+            case "200":
+            case "300":
+                style = Typeface.NORMAL;
+                break;
+            case "400":
+            case "500":
+            case "600":
+                style = Typeface.NORMAL;
+                break;
+            case "bold":
+            case "700":
+                style = Typeface.BOLD;
+                break;
+            case "800":
+            case "900":
+                style = Typeface.BOLD_ITALIC;
+                break;
+            default:
+                style = Typeface.NORMAL;
+        }
+        Typeface tf = Typeface.create(textPaint.getTypeface(), style);
+        if (textPaint.getTypeface() != tf) {
+            textPaint.setTypeface(tf);
+            strokePaint.setTypeface(tf);
             layoutDirty = true;
             invalidate();
         }
@@ -202,14 +224,6 @@ class StrokeTextView extends View {
     public void setEllipsis(boolean ellipsis) {
         if (this.ellipsis != ellipsis) {
             this.ellipsis = ellipsis;
-            layoutDirty = true;
-            invalidate();
-        }
-    }
-
-    public void setCustomWidth(float width) {
-        if (!(this.customWidth == width)) {
-            this.customWidth = width;
             layoutDirty = true;
             invalidate();
         }
