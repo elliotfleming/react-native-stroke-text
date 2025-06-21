@@ -42,6 +42,7 @@ class StrokeTextView: RCTView {
 
         // 2. Prepare label
         label.preferredMaxLayoutWidth = wrapWidth
+        label.invalidateIntrinsicContentSize()
         label.setNeedsLayout()
         label.layoutIfNeeded()
 
