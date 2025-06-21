@@ -1,3 +1,5 @@
+// ios/StrokedTextLabel.swift
+
 import UIKit
 
 class StrokedTextLabel: UILabel {

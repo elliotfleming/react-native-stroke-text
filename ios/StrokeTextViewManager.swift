@@ -1,3 +1,5 @@
+// ios/StrokeTextViewManager.swift
+
 import Foundation
 import UIKit
 

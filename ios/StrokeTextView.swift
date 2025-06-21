@@ -1,3 +1,5 @@
+// ios/StrokeTextView.swift
+
 import Foundation
 import UIKit
 
@@ -35,15 +37,14 @@ class StrokeTextView: RCTView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        // If the JS side already set a height (style.height, flex, etc.),
-        // respect it. Only compute our own height when Yoga gave us 0.
-        guard bounds.height == 0 else { return }
+        let intrinsic = label.intrinsicContentSize
+        let targetWidth = bounds.width == 0 ? intrinsic.width : bounds.width
+        let targetHeight = intrinsic.height  // always recalc height
 
-        let target = CGSize(
-            width: bounds.width,
-            height: label.intrinsicContentSize.height)
-
-        bridge?.uiManager.setSize(target, for: self)
+        bridge?.uiManager.setSize(
+            CGSize(
+                width: targetWidth,
+                height: targetHeight), for: self)
     }
 
     // MARK: - Properties
@@ -52,6 +53,7 @@ class StrokeTextView: RCTView {
             if text != oldValue {
                 label.text = text
                 label.setNeedsDisplay()
+                setNeedsLayout()
             }
         }
     }
