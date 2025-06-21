@@ -12,7 +12,7 @@ class StrokedTextLabel: UILabel {
         numberOfLines = 0
     }
 
-    // MARK: - Internal stroke padding
+    // MARK: - Text Insets
     private var textInsets: UIEdgeInsets = .zero
     private func updateTextInsets() {
         textInsets = UIEdgeInsets(
@@ -31,10 +31,11 @@ class StrokedTextLabel: UILabel {
 
     // MARK: - Drawing
     override func drawText(in rect: CGRect) {
-        let savedShadowOffset = self.shadowOffset  // rename to avoid shadowing
+        let savedShadowOffset = self.shadowOffset
         let originalColor = textColor
 
         lineBreakMode = ellipsis ? .byTruncatingTail : .byWordWrapping
+
         let insetRect = rect.inset(by: textInsets)
 
         guard let ctx = UIGraphicsGetCurrentContext() else {
@@ -57,7 +58,7 @@ class StrokedTextLabel: UILabel {
         self.shadowOffset = .zero
         super.drawText(in: insetRect)
 
-        self.shadowOffset = savedShadowOffset  // restore
+        self.shadowOffset = savedShadowOffset
     }
 
     // MARK: - Size

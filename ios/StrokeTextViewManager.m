@@ -1,3 +1,5 @@
+// ios/StrokeTextViewManager.m
+
 #import <React/RCTViewManager.h>
 
 @interface RCT_EXTERN_MODULE (StrokeTextViewManager, RCTViewManager)

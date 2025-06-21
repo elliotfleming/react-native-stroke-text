@@ -23,13 +23,11 @@ class StrokeTextView: RCTView {
 
         addSubview(label)
 
-        // label.leadingAnchor.constraint(equalTo: leadingAnchor),
-        // label.trailingAnchor.constraint(equalTo: trailingAnchor),
-        // label.topAnchor.constraint(equalTo: topAnchor),
-        // label.bottomAnchor.constraint(equalTo: bottomAnchor),
         NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
+            label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
+            label.topAnchor.constraint(equalTo: self.topAnchor),
+            label.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])
     }
 
@@ -37,10 +35,12 @@ class StrokeTextView: RCTView {
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     // MARK: - Layout
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.bridge?.uiManager.setSize(label.intrinsicContentSize, for: self)
-    }
+    // This makes the view the size of the label
+    // but we want the label to fill the view
+    // override func layoutSubviews() {
+    //     super.layoutSubviews()
+    //     self.bridge?.uiManager.setSize(label.intrinsicContentSize, for: self)
+    // }
 
     // MARK: - Properties
     @objc var text: String = "" {
