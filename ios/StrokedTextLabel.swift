@@ -62,13 +62,11 @@ class StrokedTextLabel: UILabel {
     }
 
     // MARK: - Size
-    /// If > 0, wrap lines at this width when computing intrinsic size.
-    var wrapWidth: CGFloat = 0 { didSet { invalidateIntrinsicContentSize() } }
-
     override var intrinsicContentSize: CGSize {
         var size = super.intrinsicContentSize
-        size.width += outlineWidth
-        size.height += outlineWidth
+        let inset = outlineWidth * 2
+        size.width += inset
+        size.height += inset
         return size
     }
 }
