@@ -12,21 +12,24 @@ class StrokeTextView: RCTView {
 
     // MARK: - init
     init(bridge: RCTBridge) {
-        self.bridge = bridge
         label = StrokedTextLabel()
+
+        self.bridge = bridge
         super.init(frame: .zero)
 
         label.textColor = colorStringToUIColor(colorString: color)
         label.outlineColor = colorStringToUIColor(colorString: strokeColor)
-
         label.translatesAutoresizingMaskIntoConstraints = false
+
         addSubview(label)
 
+        // label.leadingAnchor.constraint(equalTo: leadingAnchor),
+        // label.trailingAnchor.constraint(equalTo: trailingAnchor),
+        // label.topAnchor.constraint(equalTo: topAnchor),
+        // label.bottomAnchor.constraint(equalTo: bottomAnchor),
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: leadingAnchor),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor),
-            label.topAnchor.constraint(equalTo: topAnchor),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor),
+            label.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: self.centerYAnchor),
         ])
     }
 
@@ -36,14 +39,7 @@ class StrokeTextView: RCTView {
     // MARK: - Layout
     override func layoutSubviews() {
         super.layoutSubviews()
-
-        // 1. Give the label the width Yoga assigned (or screen width if 0)
-        let wrap = bounds.width > 0 ? bounds.width : UIScreen.main.bounds.width
-        label.wrapWidth = wrap
-
-        // 2. Push whatever height UILabel now reports
-        let size = label.intrinsicContentSize
-        bridge?.uiManager.setSize(size, for: self)
+        self.bridge?.uiManager.setSize(label.intrinsicContentSize, for: self)
     }
 
     // MARK: - Properties
