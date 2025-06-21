@@ -34,8 +34,16 @@ class StrokeTextView: RCTView {
     // MARK: - Report height to RN
     override func layoutSubviews() {
         super.layoutSubviews()
-        let size = label.intrinsicContentSize
-        bridge?.uiManager.setSize(size, for: self)
+
+        // If the JS side already set a height (style.height, flex, etc.),
+        // respect it. Only compute our own height when Yoga gave us 0.
+        guard bounds.height == 0 else { return }
+
+        let target = CGSize(
+            width: bounds.width,
+            height: label.intrinsicContentSize.height)
+
+        bridge?.uiManager.setSize(target, for: self)
     }
 
     // MARK: - Properties
@@ -48,6 +56,7 @@ class StrokeTextView: RCTView {
         }
     }
 
+    // MARK: - Font Size
     @objc var fontSize: NSNumber = 14 {
         didSet {
             if fontSize != oldValue {
@@ -57,6 +66,7 @@ class StrokeTextView: RCTView {
         }
     }
 
+    // MARK: - Font Weight
     @objc var fontWeight: String = "normal" {
         didSet {
             guard fontWeight != oldValue else { return }
@@ -81,6 +91,7 @@ class StrokeTextView: RCTView {
         }
     }
 
+    // MARK: - Color
     @objc var color: String = "#000000" {
         didSet {
             if color != oldValue {
@@ -90,6 +101,7 @@ class StrokeTextView: RCTView {
         }
     }
 
+    // MARK: - Stroke Color
     @objc var strokeColor: String = "#FFFFFF" {
         didSet {
             if strokeColor != oldValue {
@@ -99,6 +111,7 @@ class StrokeTextView: RCTView {
         }
     }
 
+    // MARK: - Stroke Width
     @objc var strokeWidth: NSNumber = 1 {
         didSet {
             if strokeWidth != oldValue {
@@ -108,6 +121,7 @@ class StrokeTextView: RCTView {
         }
     }
 
+    // MARK: - Font Family
     @objc var fontFamily: String = "Helvetica" {
         didSet {
             if fontFamily != oldValue {
@@ -132,6 +146,7 @@ class StrokeTextView: RCTView {
         }
     }
 
+    // MARK: - Alignment
     @objc var align: String = "center" {
         didSet {
             if align != oldValue {
@@ -148,6 +163,7 @@ class StrokeTextView: RCTView {
         }
     }
 
+    // MARK: - Ellipsis
     @objc var ellipsis: Bool = false {
         didSet {
             if ellipsis != oldValue {
@@ -157,6 +173,7 @@ class StrokeTextView: RCTView {
         }
     }
 
+    // MARK: - Number of Lines
     @objc var numberOfLines: NSNumber = 0 {
         didSet {
             if numberOfLines != oldValue {
@@ -166,6 +183,7 @@ class StrokeTextView: RCTView {
         }
     }
 
+    // MARK: - Helpers
     private func colorStringToUIColor(colorString: String) -> UIColor {
         var string = colorString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
 
