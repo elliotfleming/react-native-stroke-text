@@ -219,4 +219,8 @@ class StrokeTextView: RCTView {
 
         return UIColor.gray
     }
+
+    override var intrinsicContentSize: CGSize {
+        return label.intrinsicContentSize
+    }
 }
