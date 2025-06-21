@@ -61,8 +61,27 @@ class StrokedTextLabel: UILabel {
     }
 
     // MARK: - Size
+    /// If > 0, wrap lines at this width when computing intrinsic size.
+    var wrapWidth: CGFloat = 0 { didSet { invalidateIntrinsicContentSize() } }
+
     override var intrinsicContentSize: CGSize {
-        var size = super.intrinsicContentSize
+        // 1. Ask UILabel for its normal size first
+        var size: CGSize
+
+        if wrapWidth > 0 {
+            // Constrain width, let UIKit compute height
+            let rect =
+                text?.boundingRect(
+                    with: CGSize(width: wrapWidth, height: .greatestFiniteMagnitude),
+                    options: [.usesLineFragmentOrigin, .usesFontLeading],
+                    attributes: [.font: font as Any],
+                    context: nil) ?? .zero
+            size = CGSize(width: ceil(rect.width), height: ceil(rect.height))
+        } else {
+            size = super.intrinsicContentSize
+        }
+
+        // 2. Add one outline padding *once* (top+bottom, left+right)
         size.width += outlineWidth * 2
         size.height += outlineWidth * 2
         return size

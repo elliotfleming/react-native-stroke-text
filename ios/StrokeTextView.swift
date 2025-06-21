@@ -33,42 +33,17 @@ class StrokeTextView: RCTView {
     // Storyboard/XIB not supported
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-    private func textHeight(for text: String, wrapWidth: CGFloat) -> CGFloat {
-        let attr = [NSAttributedString.Key.font: label.font as Any]
-        let rect = (text as NSString).boundingRect(
-            with: CGSize(
-                width: wrapWidth,
-                height: .greatestFiniteMagnitude),
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: attr,
-            context: nil)
-        return ceil(rect.height) + label.outlineWidth * 2  // add stroke padding
-    }
-
-    private func recalcSizeIfNeeded() {
-        guard let bridge = bridge else { return }
-
-        // 1. Use the real width if we have it, else fall back to the screen.
-        let wrapWidth =
-            bounds.width > 0
-            ? bounds.width
-            : UIScreen.main.bounds.width
-
-        // 2. Measure height with Core Text – always up-to-date.
-        let neededHeight = textHeight(for: label.text ?? "", wrapWidth: wrapWidth)
-
-        // 3. Notify RN only if height really changed or width was unknown.
-        if neededHeight != bounds.height || bounds.width == 0 {
-            bridge.uiManager.setSize(
-                CGSize(width: wrapWidth, height: neededHeight),
-                for: self)
-        }
-    }
-
-    // MARK: - Report Layout
+    // MARK: - Layout
     override func layoutSubviews() {
         super.layoutSubviews()
-        recalcSizeIfNeeded()  // handles first layout & any parent-size changes
+
+        // 1. Give the label the width Yoga assigned (or screen width if 0)
+        let wrap = bounds.width > 0 ? bounds.width : UIScreen.main.bounds.width
+        label.wrapWidth = wrap
+
+        // 2. Push whatever height UILabel now reports
+        let size = label.intrinsicContentSize
+        bridge?.uiManager.setSize(size, for: self)
     }
 
     // MARK: - Properties
@@ -77,7 +52,6 @@ class StrokeTextView: RCTView {
             if text != oldValue {
                 label.text = text
                 label.setNeedsDisplay()
-                recalcSizeIfNeeded()
             }
         }
     }
