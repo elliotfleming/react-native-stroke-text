@@ -33,26 +33,29 @@ class StrokeTextView: RCTView {
     // Storyboard/XIB not supported
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-    // MARK: - Report height to RN
+    // MARK: - Report Layout
     override func layoutSubviews() {
         super.layoutSubviews()
+        updateSizeNow()  // handles first layout & any parent-size changes
+    }
 
-        // 1. Tell the label the width it must wrap within.
-        label.preferredMaxLayoutWidth = bounds.width
-
-        // 2. Measure height with that width constraint.
-        let neededHeight = label.sizeThatFits(
+    private func updateSizeNow() {
+        // Make the label lay out its new text immediately
+        label.preferredMaxLayoutWidth =
+            bounds.width == 0 ? UIScreen.main.bounds.width : bounds.width
+        let needed = label.sizeThatFits(
             CGSize(
-                width: bounds.width,
+                width: bounds.width == 0 ? UIScreen.main.bounds.width : bounds.width,
                 height: .greatestFiniteMagnitude)
-        ).height
+        )
 
-        // 3. If either dimension differs, push the new size to RN.
-        if bounds.height != neededHeight || bounds.width == 0 {
-            let target = CGSize(
-                width: bounds.width == 0 ? neededHeight : bounds.width,
-                height: neededHeight)
-            bridge?.uiManager.setSize(target, for: self)
+        // Only push if something really changed
+        if needed.height != bounds.height || (bounds.width == 0) {
+            bridge?.uiManager.setSize(
+                CGSize(
+                    width: bounds.width == 0 ? needed.width : bounds.width,
+                    height: needed.height),
+                for: self)
         }
     }
 
@@ -63,7 +66,7 @@ class StrokeTextView: RCTView {
                 label.text = text
                 label.setNeedsDisplay()
                 label.invalidateIntrinsicContentSize()
-                setNeedsLayout()
+                updateSizeNow()
             }
         }
     }
