@@ -37,14 +37,23 @@ class StrokeTextView: RCTView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        let intrinsic = label.intrinsicContentSize
-        let targetWidth = bounds.width == 0 ? intrinsic.width : bounds.width
-        let targetHeight = intrinsic.height  // always recalc height
+        // 1. Tell the label the width it must wrap within.
+        label.preferredMaxLayoutWidth = bounds.width
 
-        bridge?.uiManager.setSize(
+        // 2. Measure height with that width constraint.
+        let neededHeight = label.sizeThatFits(
             CGSize(
-                width: targetWidth,
-                height: targetHeight), for: self)
+                width: bounds.width,
+                height: .greatestFiniteMagnitude)
+        ).height
+
+        // 3. If either dimension differs, push the new size to RN.
+        if bounds.height != neededHeight || bounds.width == 0 {
+            let target = CGSize(
+                width: bounds.width == 0 ? neededHeight : bounds.width,
+                height: neededHeight)
+            bridge?.uiManager.setSize(target, for: self)
+        }
     }
 
     // MARK: - Properties
@@ -53,6 +62,7 @@ class StrokeTextView: RCTView {
             if text != oldValue {
                 label.text = text
                 label.setNeedsDisplay()
+                label.invalidateIntrinsicContentSize()
                 setNeedsLayout()
             }
         }
