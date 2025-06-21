@@ -47,15 +47,18 @@ class StrokeTextView: RCTView {
         label.layoutIfNeeded()
 
         // 3. Measure full height
-        let needed = label.sizeThatFits(
+        let rawHeight = label.sizeThatFits(
             CGSize(
                 width: wrapWidth,
-                height: .greatestFiniteMagnitude))
+                height: .greatestFiniteMagnitude)
+        ).height
+
+        let neededHeight = rawHeight + label.outlineWidth * 2
 
         // 4. Push when height changed OR width was zero (first frame)
-        if needed.height != bounds.height || bounds.width == 0 {
+        if neededHeight != bounds.height || bounds.width == 0 {
             bridge?.uiManager.setSize(
-                CGSize(width: wrapWidth, height: needed.height),
+                CGSize(width: wrapWidth, height: neededHeight),
                 for: self)
         }
     }

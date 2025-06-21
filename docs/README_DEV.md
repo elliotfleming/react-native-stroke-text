@@ -10,9 +10,3 @@ npm version prerelease --preid lp
 git push origin main --follow-tags
 npm publish --access public
 ```
-
-### One Liner
-
-```bash
-git push origin main && npm run build && npm version prerelease --preid lp && git push origin main --follow-tags && npm publish --access public
-```
