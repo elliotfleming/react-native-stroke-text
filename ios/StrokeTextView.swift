@@ -33,30 +33,36 @@ class StrokeTextView: RCTView {
     // Storyboard/XIB not supported
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
+    private func recalcSizeIfNeeded() {
+        // 1. Determine the wrap width we’ll use
+        let wrapWidth: CGFloat =
+            bounds.width > 0
+            ? bounds.width
+            : UIScreen.main.bounds.width  // fallback
+
+        // 2. Prepare label
+        label.preferredMaxLayoutWidth = wrapWidth
+        label.setNeedsLayout()
+        label.layoutIfNeeded()
+
+        // 3. Measure full height
+        let needed = label.sizeThatFits(
+            CGSize(
+                width: wrapWidth,
+                height: .greatestFiniteMagnitude))
+
+        // 4. Push when height changed OR width was zero (first frame)
+        if needed.height != bounds.height || bounds.width == 0 {
+            bridge?.uiManager.setSize(
+                CGSize(width: wrapWidth, height: needed.height),
+                for: self)
+        }
+    }
+
     // MARK: - Report Layout
     override func layoutSubviews() {
         super.layoutSubviews()
-        updateSizeNow()  // handles first layout & any parent-size changes
-    }
-
-    private func updateSizeNow() {
-        // Make the label lay out its new text immediately
-        label.preferredMaxLayoutWidth =
-            bounds.width == 0 ? UIScreen.main.bounds.width : bounds.width
-        let needed = label.sizeThatFits(
-            CGSize(
-                width: bounds.width == 0 ? UIScreen.main.bounds.width : bounds.width,
-                height: .greatestFiniteMagnitude)
-        )
-
-        // Only push if something really changed
-        if needed.height != bounds.height || (bounds.width == 0) {
-            bridge?.uiManager.setSize(
-                CGSize(
-                    width: bounds.width == 0 ? needed.width : bounds.width,
-                    height: needed.height),
-                for: self)
-        }
+        recalcSizeIfNeeded()  // handles first layout & any parent-size changes
     }
 
     // MARK: - Properties
@@ -65,8 +71,7 @@ class StrokeTextView: RCTView {
             if text != oldValue {
                 label.text = text
                 label.setNeedsDisplay()
-                label.invalidateIntrinsicContentSize()
-                updateSizeNow()
+                recalcSizeIfNeeded()
             }
         }
     }
