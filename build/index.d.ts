@@ -1,0 +1,31 @@
+import React from "react";
+import { StyleProp, TextStyle } from "react-native";
+export interface StrokeTextProps {
+    children?: React.ReactNode;
+    text?: string;
+    strokeColor?: string;
+    strokeWidth?: number;
+    numberOfLines?: number;
+    ellipsis?: boolean;
+    maxFontSizeMultiplier?: number;
+    style?: StyleProp<TextStyle>;
+    fontSize?: TextStyle["fontSize"];
+    fontWeight?: TextStyle["fontWeight"];
+    fontFamily?: TextStyle["fontFamily"];
+    fontStyle?: TextStyle["fontStyle"];
+    color?: TextStyle["color"];
+    lineHeight?: TextStyle["lineHeight"];
+    letterSpacing?: TextStyle["letterSpacing"];
+    textAlign?: TextStyle["textAlign"];
+    textDecorationLine?: TextStyle["textDecorationLine"];
+    textTransform?: TextStyle["textTransform"];
+    opacity?: TextStyle["opacity"];
+    padding?: number;
+    paddingVertical?: number;
+    paddingHorizontal?: number;
+    paddingTop?: number;
+    paddingBottom?: number;
+    paddingLeft?: number;
+    paddingRight?: number;
+}
+export declare const StrokeText: ({ children, text, ...rest }: StrokeTextProps) => React.JSX.Element;

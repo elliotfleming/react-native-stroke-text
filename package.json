@@ -1,0 +1,36 @@
+{
+  "name": "react-native-stroke-text",
+  "version": "1.0.0",
+  "description": "React Native + Expo Stroke/Outline Text",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "source": "./src/",
+  "author": "Elliot Fleming (https://github.com/elliotfleming)",
+  "license": "MIT",
+  "homepage": "https://github.com/elliotfleming/react-native-stroke-text#readme",
+  "repository": "https://github.com/elliotfleming/react-native-stroke-text",
+  "bugs": {
+    "url": "https://github.com/elliotfleming/react-native-stroke-text"
+  },
+  "keywords": [
+    "react-native",
+    "stroke",
+    "text",
+    "outline"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "@types/react-native": "^0.72.8",
+    "prettier": "^3.6.2",
+    "react": "^19.1.0",
+    "react-native": "^0.80.0",
+    "typescript": "^5.8.3"
+  }
+}
