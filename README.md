@@ -6,6 +6,20 @@ Add stylish stroked (outlined) text to your React Native apps. Perfect for overl
 
 This is the most comprehensive and actively maintained stroke text library for React Native. It uses native components for optimal performance and supports both iOS and Android (no web support for expo yet).
 
+<table>
+  <tr>
+    <td>
+      <img src="docs/IMG_3495.jpeg" alt="StrokeText preview - multiline display text" height="100" />
+    </td>
+    <td>
+      <img src="docs/IMG_3494.jpeg" alt="StrokeText preview - label" height="100" />
+    </td>
+  </tr>
+</table>
+
+- [Examples 📷](#examples)
+
+
 ## Table of Contents
 
 - [React Native Stroke Text](#react-native-stroke-text)
@@ -14,8 +28,9 @@ This is the most comprehensive and actively maintained stroke text library for R
   - [Installation](#installation)
     - [Expo (Managed)](#expo-managed)
     - [Bare React Native](#bare-react-native)
-      - [Android](#android)
+    - [Android](#android)
   - [Usage](#usage)
+  - [Examples](#examples)
   - [API](#api)
     - [Core Props](#core-props)
     - [Text Style Props](#text-style-props)
@@ -65,7 +80,7 @@ After installing the package:
 cd ios && pod install && cd ..
 ```
 
-#### Android
+### Android
 
 * **Minimum** `compileSdkVersion` 34
 * Autolinking should handle everything; no further steps required.
@@ -133,6 +148,20 @@ export default function Example() {
   );
 }
 ```
+
+## Examples
+
+<table width="100%" max-width="900px">
+  <tr valign="top">
+    <td width="40%">
+      <img src="docs/IMG_3486.PNG" alt="StrokeText preview - label" width="100%" />
+    </td>
+    <td width="60%">
+      <img src="docs/IMG_3495.jpeg" alt="StrokeText preview - multiline display text" width="100%" /><br/>
+      <img src="docs/IMG_3494.jpeg" alt="StrokeText preview - label" width="100%" />
+    </td>
+  </tr>
+</table>
 
 ## API
 
