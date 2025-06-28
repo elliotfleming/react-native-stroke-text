@@ -1,6 +1,6 @@
 {
   "name": "react-native-stroke-text",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React Native + Expo Stroke/Outline Text",
   "main": "build/index.js",
   "types": "build/index.d.ts",
