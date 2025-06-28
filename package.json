@@ -14,9 +14,11 @@
   },
   "keywords": [
     "react-native",
+    "expo",
     "stroke",
     "text",
-    "outline"
+    "outline",
+    "display text"
   ],
   "scripts": {
     "build": "tsc"
